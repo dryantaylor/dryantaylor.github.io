@@ -8,7 +8,7 @@ Whilst Unity has you create a new class which inherits from [`MonoBehaviour`](ht
 ```cpp
 struct ComponentName {
 	static void update(Component* self, unsigned int deltaTime);
-	static void attachNew(Component* comp /*,optionally include extra arguments*/ )
+	static void attachNew(Component* comp /*,optionally include extra arguments*/ );
 	//optional method and only used by physics objects
 	static void physicsUpdate(Component* self);
 }
