@@ -70,7 +70,7 @@ Accessing Component data isn't quite as simple as `object->field` however , it i
 ### Accessing data of the same Component in the update function.
 For those familiar with python, the `self` in the update function probably somewhat gave it away, and indeed python's class approach is where I got some of the inspiration from. Whilst there is a `Component::getData` method, for finding a given type we have to call the
 [`typeid`](https://en.cppreference.com/w/cpp/language/typeid) operator on the type we're after, and manually cast the returned pointer to the correct type ('ll write about why in a future post where I dive into the inner working of the Component System on a technical level which will explain why). So instead it's simpler to use the `componentGetData()` macro for this purpose. Here we pass in a pointer to the component we're looking for data in, and the type we're after. This will give us the data we're after as a pointer to the type we passed in. For example:
-```cpp
+```c++
 PlayerControllerData* playerData = componentGetData(self, PlayerControllerData);
 ```
 
