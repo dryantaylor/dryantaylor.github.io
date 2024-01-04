@@ -18,7 +18,9 @@ function, and any physics updates in the physicsUpdate function.
 The `attachNew` function is ran when creating new components of that type, and is passed the `Component` object it will be attached to (however each component can only have one attached set of methods to it). In this function you can attach data structures to the Component, set any flags the component should have, such as `RENDERABLE` or `VELOCITY`, each of which comes with certain promises about what functions or data types it will have. Here is also where you set an `update` function, and optionally a `physicsUpdate` function if the flags you set require one. 
 
 To give an example let's examine the Renderable Component:
+
 >Renderable.h
+
 ```cpp
 struct RenderableData {
 	/*
@@ -44,7 +46,9 @@ struct RenderableData {
 	SDL_Rect rect;
 };
 ```
+
 >Renderable.cpp
+
 ```cpp
 void Components::Renderable::AttachNew(Gameobjects::Component* comp, 
      std::string path, int width, int height)
@@ -56,6 +60,7 @@ void Components::Renderable::AttachNew(Gameobjects::Component* comp,
 	);
 }
 ```
+
 On the first Line, we're giving the component the `RENDERABLE` flag, this informs the rest of the engine that this component can be rendered. It also tells the rest of the engine it is allowed to assume the presence of a struct which is `RenderableData` in the Component's Data vector. Note that giving a Component a flag without holding to that flag's promises results in undefined behaviour, and I'm *extra* releasing myself from any liability there.
 
 On the Second line we set the update field of the Component to the Renderable's static update function. This function actually does nothing, however all Components require an update function be set, even if it just immediately returns. 
