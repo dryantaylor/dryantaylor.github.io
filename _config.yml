@@ -26,9 +26,9 @@ markdown: GFM
 GFM:
   syntax_highlighter_opts:
     disable : true
-#kramdown:
-  #syntax_highlighter_opts:
-  # disable: true
+kramdown:
+  syntax_highlighter_opts:
+    disable: true
     
 plugins:
   - jekyll-feed
