@@ -21,10 +21,10 @@ github_username: "dryantaylor"
 theme: "minima"
 
 #rss: rss
-
-kramdown:
-  syntax_highlighter_opts:
-   disable: true
+markdown: GFM
+#kramdown:
+  #syntax_highlighter_opts:
+  # disable: true
     
 plugins:
   - jekyll-feed
