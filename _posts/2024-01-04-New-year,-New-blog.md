@@ -1,5 +1,5 @@
 # New year New blog - The basics of Macgyver
-So I'm well aware this comes a couple of days late to be 'new year' but it's close enough so that's what I'm gonna title this post. Since this is the first post I want to focus on the fundamentals of how the engine works currently. This post will assume some familiarity with Unity's GameObject System. 
+So I'm well aware this comes a couple of days late to be 'new year' but it's close enough so that's what I'm gonna title this post. Since this is the first post I want to focus on the fundamentals of how the engine works currently. I won't be focusing on the implemented Components that come with the engine at this time, as I want to write seperately about the different systems that have been implemented, instead I will be giving an overview of the engines GameObject system. This post will assume some familiarity with Unity's GameObject System. 
 
 At a glance it uses a Scene -> GameObjects -> Component system where a single Scene holds many GameObjects which also holds many related Components. Each GameObject has a parent Scene, and each Component has a parent GameObject. Through their parents they can interact with other GameObjects and Components. For example the Macgyver GameObject has the [`getComponentsWithProperty()`](https://github.com/dryantaylor/Macgyver/blob/1dcf91efc6b7c93aca703ff105e8680379194b15/MacGyver/GameObject.h#L45) function much akin to Unity's  [`GameObject.GetComponent()`](https://docs.unity3d.com/ScriptReference/GameObject.GetComponent.html) method. However within Components is where the engine really begins to differ.
 
@@ -87,3 +87,49 @@ In the case of the same GameObject we use our `self` object to get it's parent G
 When searching the whole Scene we use the `self` Component's `getWorldScene` method and from the Scene object call its `getComponentsInWorldByType` method, which again returns a `std::vector<Component*>` of all Components with the required flag set.
 
 From there we simply use the same `componentGetData` macro from above, but with the returned Component/s instead of self. 
+
+For an example let's take a look at how the UICamera Component will render all `UI_RENDERABLE` components in a scene.
+
+>UIRenderableData.h (without constructors and destructors)
+
+```cpp
+struct UIRenderableData {
+	/// Pointer to internal SDL texture
+	SDL_Texture* texture;
+	/// SDL rect to contain the width and height to render the 
+	/// texture at on screen
+	SDL_Rect rect;
+};
+```
+
+>UICamera.cpp
+
+```cpp
+void Macgyver::Components::UI::UICamera::draw(Gameobjects::Component* self)
+{
+	std::vector<Gameobjects::Component*> renderables =
+		self->getWorldScene()->getComponentsInWorldByType(UI_RENDERABLE);
+	
+	for (Gameobjects::Component* comp : renderables) 
+	{
+		Components::UI::UIRenderableData* data =
+			componentGetData(comp, UIRenderableData);
+
+		//Render code here, using the rect of the data
+	}
+}
+```
+
+In the first line we get all the components with the `UI_RENDERABLE` flag. 
+Then we iterate over each found component, calling the `componentGetData` function with the type we're after.
+Notice how this code in the engine has no check for the presence of a UIRenderableData structure, it will simply assume it is.
+
+## Wrapping up
+So to wrap up the engines framework is much akin to Unitys up until we reach the Component level. 
+Here it instead opperates on a function and data struct level. Each Scene holds multiple GameObjects which
+in turn hold multiple Components. 
+
+Each Component however holds one update method, and can hold multiple different
+data structures. A Component can have flags set to make promisies about having a `physicsUpdate` function, and 
+certain data structures, but an update function is required for all Components. Other Components can then use
+these flags to find other Components which they can opperate on their data based on these flags. 
