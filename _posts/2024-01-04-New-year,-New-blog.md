@@ -122,7 +122,7 @@ void Macgyver::Components::UI::UICamera::draw(Gameobjects::Component* self)
 
 In the first line we get all the components with the `UI_RENDERABLE` flag. 
 Then we iterate over each found component, calling the `componentGetData` function with the type we're after.
-Notice how this code in the engine has no check for the presence of a UIRenderableData structure, it will simply assume it is.
+Notice how this code in the engine has no check for the presence of a UIRenderableData structure, it will simply assume it is present.
 
 ## Wrapping up
 So to wrap up the engines framework is much akin to Unitys up until we reach the Component level. 
